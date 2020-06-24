@@ -1,0 +1,176 @@
+---
+title: "R Notebook - Trabalho de PO"
+output: html_notebook
+---
+
+## Trabalho de PO Usando R
+
+## Objetivo
+
+- Apresentar um modelo de programação Linear com uso da ferramenta R
+
+## Problematica 
+
+Proprietário de uma loja de informatica deseja otimizar um compras de produtos seu estoque, também tendo que ser considerado o tamanho da sua aréa disponibilizada para alocar esse produtos.
+
+> Disponibilidade da empresa:
+
+ - a empresa conta com um cápital de 3.500.00,00 = $i_1$
+ - e uma área de $850m^3$ = $v_1$
+
+Sendo, nosso problema consiste em achar $x_1, x_2, ..., x_n$, que máximize de cada item 
+
+Suponhamos que a loja deseje comprar *n* itens para abastecer seu estóque de um mês qualquer ela tem um valor de $X$ reais para ser investido e um espaço de armazenamento de $ymˆ3$. Sabe-se que o lucro de cada item é $c1, c2, ..., cn$. 
+O preço de custo unitário é $u11, u12, ..., u1n$ e o volume unitário é $u21, u22, ..., u2n$.
+
+A loja deve conter uma quantidade mínima e uma máxima de cada item para não deixar falta e nem ficar com mercadoria flutuando no seu estoque, satisfazendo assim a demanda. A quantidade mínima de cada item é $q1, q2, ..., qn$ e a máxima é $p1, p2, ..., pn$.
+
+Então nosso problema consiste em achar $x1, x2, ..., xn$ que maximize a função objetivo.
+
+Maximizar $Z = c1x1 + c2x2 + ... + cnxn$, sujeito as restrições
+
+$$
+\begin{cases}
+a_{11}x_1 + a_{12}x_2 + · · · + a_{1n}x_n \le i_1  \\
+a_{21}x_1 + a_{22}x_2 + · · · + a_{2n}x_n \le v_1 \\
+\end{cases}
+$$
+com as restrições: 
+
+$$
+\begin{cases}
+q_{1} \le x_1 \le p_1 \\
+q_{2} \le x_2 \le p_2 \\
+\vdots  \\
+q_{n} \le x_n \le p_n \\
+\end{cases}
+$$
+
+E as restrições de não negatividade para $x_i \ge 0$ onde $(i = 1,2,...,n)$
+
+
+## Inicio modelagem no R:
+
+- Importar a base da dados: import Dataset;
+
+- Hack para grande quantidade de dados
+
+- Import da biblioteca ou packages:
+
+```{r}
+# A function to modify functions
+patch <- function(f, before, after) { 
+  f_text <- capture.output(dput(f))
+  g_text <- gsub(before, after, f_text)
+  g <- eval(parse(text = g_text))
+  environment(g) <- environment(f)
+  g
+}
+#install.packages("lpSolveAPI")
+library(lpSolveAPI)
+
+# print.lpExtPtr <- patch( print.lpExtPtr, "8", "800" )
+```
+
+ - adicionando o banco ou arquivo a ser trabalhado
+ 
+```{r}
+attach(base_modificada)
+``` 
+Alterando Formato de apresentação dos dados
+
+```{r}
+#options(max.print = 45000)
+length(base_modificada[1,])
+```
+
+ - Setando a matriz
+
+```{r}
+lprec <- make.lp(0, length(base_modificada[1,]))
+
+#print.lpExtPtr <- patch( print.lpExtPtr, "8", "800" )
+lprec
+```
+
+Adicionando configuração
+
+```{r}
+lp.control(lprec, sense="max")
+```
+
+ - Função Objetivo
+
+```{r}
+set.objfn(lprec, base_modificada[1,])
+
+base_modificada[2,]
+```
+
+ - Adicionando as restrições:
+
+ - Maximo de gasto
+
+```{r}
+add.constraint(lprec, base_modificada[1,], "<=", 3500000)
+```
+
+- Máximo de Volume
+
+```{r}
+add.constraint(lprec, base_modificada[3,], "<=", 850)
+```
+
+ - Minimo no estoque
+```{r} 
+# Q. Minimo
+set.bounds(lprec, lower = base_modificada[4,])
+```
+
+- Máximo no estoque
+```{r} 
+# Q. Máximo
+set.bounds(lprec, upper = base_modificada[5,])
+```
+
+ - Saida da matriz 
+```{r}
+lprec
+print.lpExtPtr <- patch( print.lpExtPtr, "8", "800" )
+lprec
+```
+ - Resolução do problema:
+
+```{r}
+solve(lprec)
+```
+
+ - Solução Ótima
+
+```{r}
+get.objective(lprec)
+```
+
+ - Valores da solução otima
+
+```{r}
+get.variables(lprec)
+```
+
+## Considerações 
+
+O trabalho de conclusão de curso apresentou uma ferramenta matemática de otimização utilizando o R e a IDE RStudio permitiu reconhecer a técnica da Programação Linear como uma importante aliada quando se deseja alcançar êxito em problemas lineares.
+
+Com isso mostramos que a ferramentas de pesquisa operacional tem uma extrema importância em aplicação que desejam embasar as tomadas de decisões em nível gerencial. 
+
+O software utilizado para resolução do problema de programação linear, R e a Ide RStudio, atendeu as necessidades, ao passo que apresentou resultados com elevada confiabilidade e rapidez, o mesmo que tem sua licensa openSource. 
+
+Os resultados obtidos para a programação de compra do mês em estudo demonstraram que os conceitos iniciais foram plenamente atendidos, de maneira que a solução final utilizasse culminante o espaço e o capital disponível naquele mês. 
+
+Além, de que é possível também elaborar uma modelagem para a semana, dia ou para qualquer outro período, chegando assim a programação de compra ótima para aquele período. 
+
+Este problema pode ser estendido para outros campos, como por exemplo para uma montadora de automóvel, podemos otimizar a compra do número de peças, para a produção desejada de automóveis.
+
+De acordo com as análises realizadas, considera-se que o estudo cumpriu com seus objetivos iniciais, configurando-se em excelente oportunidade de aplicação dos conceitos abordados na cadeira de Pesquisa Operacional.
+
+
