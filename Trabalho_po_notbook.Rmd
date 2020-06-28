@@ -3,7 +3,32 @@ title: "R Notebook - Trabalho de PO"
 output: html_notebook
 ---
 
-## Trabalho de PO Usando R
+## Trabalho de PO usando R
+
+### Porque usar o R
+
+
+R é uma linguagem de programação multi-paradigma (com ênfase em programação funcional), dinâmica, fracamente tipada, voltada à manipulação, análise e visualização de dados e ambientada para computação estatística e gráficos, semelhante à linguagem S originalmente desenvolvida no Bell Labs. É uma solução de código aberto para análise de dados, suportada por uma grande e ativa comunidade de pesquisa mundial. Existem muitos pacotes estatísticos e gráficos populares disponíveis (como Microsoft Excel, SAS, IBM SPSS, Stata e Minitab). Mesmo assim por que usar o R?
+
+**R tem muitos recursos para recomendá-lo:**
+
+- A maioria das plataformas comerciais de software estatístico custa milhares, senão dezenas de milhares, de dólares. R é grátis! Se você é professor ou aluno, os benefícios são óbvios.
+
+- R é uma plataforma estatística abrangente, oferecendo todos os tipos de técnicas de análise de dados. Praticamente qualquer tipo de análise de dados pode ser feita em R.
+
+- R contém rotinas estatísticas avançadas ainda não disponíveis em outros pacotes. De fato, novos métodos ficam disponíveis para download semanalmente. Se você é um usuário do SAS, imagine obter um novo SAS PROC a cada poucos dias.
+
+- O R possui recursos gráficos de ponta. Se você deseja visualizar dados complexos, o R possui o conjunto de recursos mais abrangente e poderoso disponível.
+
+- R é uma plataforma poderosa para análise e exploração interativa de dados. Desde o início, ele foi projetado para apoiar a qualquer etapa analítica podendo ser facilmente salvos, manipulados e usados como entrada para análises adicionais.
+
+- Colocar dados em um formulário utilizável de várias fontes pode ser uma proposta desafiadora. O R pode importar facilmente dados de uma ampla variedade de fontes, incluindo arquivos de texto, sistemas de gerenciamento de banco de dados, pacotes estatísticos e armazenamentos de dados especializados. Também pode gravar dados nesses sistemas. O R também pode acessar dados diretamente de páginas da web, sites de mídia social e uma ampla variedade de serviços de dados online.
+
+- O R fornece uma plataforma incomparável para programar novos métodos estatísticos de maneira fácil e direta. É facilmente extensível e fornece uma linguagem natural para programar rapidamente métodos publicados recentemente.
+
+- A funcionalidade R pode ser integrada a aplicativos escritos em outras linguagens, incluindo C++, Java, Python, PHP, Pentaho, SAS e SPSS. Isso permite que você continue trabalhando em um idioma familiar, enquanto adiciona os recursos de R aos seus aplicativos.
+
+- O R é executado em uma ampla variedade de plataformas, incluindo Windows, Unix e Mac OS X. É provável que seja executado em qualquer computador que você tenha. (Eu até me deparei com guias para instalar o R em um iPhone, o que é impressionante, mas provavelmente não é uma boa ideia.)
 
 ## Objetivo
 
@@ -68,19 +93,19 @@ patch <- function(f, before, after) {
 }
 #install.packages("lpSolveAPI")
 library(lpSolveAPI)
-
-# print.lpExtPtr <- patch( print.lpExtPtr, "8", "800" )
 ```
 
  - adicionando o banco ou arquivo a ser trabalhado
  
 ```{r}
 attach(base_modificada)
-``` 
+```
+```{r}
+
+```
 Alterando Formato de apresentação dos dados
 
 ```{r}
-#options(max.print = 45000)
 length(base_modificada[1,])
 ```
 
@@ -103,8 +128,6 @@ lp.control(lprec, sense="max")
 
 ```{r}
 set.objfn(lprec, base_modificada[1,])
-
-base_modificada[2,]
 ```
 
  - Adicionando as restrições:
@@ -123,19 +146,16 @@ add.constraint(lprec, base_modificada[3,], "<=", 850)
 
  - Minimo no estoque
 ```{r} 
-# Q. Minimo
 set.bounds(lprec, lower = base_modificada[4,])
 ```
 
 - Máximo no estoque
 ```{r} 
-# Q. Máximo
 set.bounds(lprec, upper = base_modificada[5,])
 ```
 
  - Saida da matriz 
 ```{r}
-lprec
 print.lpExtPtr <- patch( print.lpExtPtr, "8", "800" )
 lprec
 ```
